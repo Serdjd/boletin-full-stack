@@ -3,7 +3,7 @@ import { supabase } from "@/app/layout";
 export async function GET() {
   const { data: articulos, error } = await supabase
     .from("articulo")
-    .select("titulo,autor,fecha_publicacion");
+    .select("id,titulo,autor,fecha_publicacion");
   if(error) {
     return new Response(JSON.stringify(error), {
         status:500,
@@ -32,7 +32,7 @@ export async function POST(request) {
                 })
             }
             return new Response(JSON.stringify({"message":"Articulo añadido correctamente"}), {
-                status: 202,
+                status: 201,
                 headers: { "Content-type": "application/json" }
             });
         }
@@ -58,7 +58,7 @@ export async function DELETE(request) {
         })
     }
     return new Response(JSON.stringify({"message":"Articulo eliminado correctamente"}), {
-        status: 203,
+        status: 201,
         headers: { "Content-type": "application/json" }
     });
 }
