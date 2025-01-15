@@ -1,6 +1,9 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
+import { createClient } from '@supabase/supabase-js'
+const supabaseUrl = 'https://yrvxotqxpuxnbnrjhnum.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlydnhvdHF4cHV4bmJucmpobnVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY3NTc0MDgsImV4cCI6MjA1MjMzMzQwOH0.76ImGFYULXtaDvTQ9vayCm41KNIQGSb8daUr3oBUPic'
+export const supabase = createClient(supabaseUrl, supabaseKey)
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
