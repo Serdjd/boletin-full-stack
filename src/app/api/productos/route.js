@@ -3,7 +3,8 @@ import { supabase } from "@/app/layout";
 export async function GET() {
     const {data: productos, error} = await supabase
     .from("producto")
-    .select("id,nombre,precio,stock")
+    .select("*")
+    .order("id")
 
     if(error) {
         return new Response(JSON.stringify(error), {
