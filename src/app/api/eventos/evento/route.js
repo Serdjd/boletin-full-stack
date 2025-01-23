@@ -8,6 +8,7 @@ export async function GET(request) {
     .from("evento")
     .select("*")
     .eq("id",id)
+    .single()
 
     if(error) {
         return new Response(JSON.stringify(error),{
@@ -28,7 +29,7 @@ export async function PUT(request) {
     const asistentes = +searchParams.get("asistentes")
     const {data,error} = await supabase
     .from("evento")
-    .update("asistentes",asistentes)
+    .update({asistentes:asistentes})
     .eq("id",id)
 
     if(error) {

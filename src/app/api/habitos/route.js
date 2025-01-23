@@ -5,6 +5,7 @@ export async function GET() {
     .from("habito")
     .select("*")
     .eq("fecha",new Date().toLocaleDateString('en-CA'))
+    .order("nombre")
     if(error) {
         return new Response(JSON.stringify(error), {
             status: 500,
@@ -49,10 +50,8 @@ export async function PUT(request) {
 
 export async function POST(request) {
     const body = await request.json()
-    let date = body.fecha.split('/')
-    const fecha = new Date(date[2], date[1] - 1, date[0])
+    const fecha = new Date(body.fecha)
     if(fecha >= new Date() && body.nombre) {
-        body.fecha = fecha.toLocaleDateString('en-CA')
         const {data,error} = await supabase
         .from("habito")
         .insert(body) 
@@ -70,7 +69,7 @@ export async function POST(request) {
         })
     }
     return new Response(JSON.stringify({message: "Faltan datos o no son correctos"}),{
-        status: 500,
+        status: 501,
         headers: {"Content-type": "application/json"}
     })
 }
@@ -82,10 +81,10 @@ export async function DELETE(request) {
     if(id) {
         const {data,error,count} = await supabase
         .from("habito")
-        .delete()
+        .delete({ count: 'exact' })
         .eq("id",id)
         .eq("completado",true)
-
+        console.log(count)
         if(error) {
             return new Response(JSON.stringify(error),{
                 status: 500,
@@ -100,7 +99,7 @@ export async function DELETE(request) {
         }
     }
     return new Response(JSON.stringify({message: "Error"}),{
-        status: 500,
+        status: 502,
         headers: {"Content-type": "application/json"}
     })
 }

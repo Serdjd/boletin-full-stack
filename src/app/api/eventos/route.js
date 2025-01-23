@@ -3,7 +3,7 @@ import { supabase } from "@/app/layout";
 export async function GET() {
     const {data,error} = await supabase
     .from("evento")
-    .select("*")
+    .select("id,titulo,fecha")
     .order("fecha")
 
     if(error) {
@@ -22,10 +22,9 @@ export async function GET() {
 export async function POST(request) {
     const body = await request.json()
 
-    if(body.titulo && body.descripcion && ubicacion) {
+    if(body.titulo && body.descripcion && body.ubicacion) {
         try {
-            const parts = body.fecha.split("/")
-            body.fecha = new Date(parts[2], parts[1] - 1, parts[0])
+            body.fecha = new Date(body.fecha)
         }
         catch(error) {
             return new Response(JSON.stringify(error),{
@@ -33,14 +32,13 @@ export async function POST(request) {
                 headers: {"Content-type": "application/json"}
             })
         }
-
         const {data,error} = await supabase
         .from("evento")
         .insert(body)
 
         if(error) {
             return new Response(JSON.stringify(error),{
-                status: 500,
+                status: 501,
                 headers: {"Content-type": "application/json"}
             })
         }
@@ -58,8 +56,7 @@ export async function DELETE(request) {
     const body = await request.json()
 
     try {
-        const parts = body.fecha.split("/")
-        body.fecha = new Date(parts[2], parts[1] - 1, parts[0])
+        body.fecha = new Date(body.fecha)
     }
     catch(error) {
         return new Response(JSON.stringify(error),{
@@ -67,13 +64,12 @@ export async function DELETE(request) {
             headers: {"Content-type": "application/json"}
         })
     }
-
     if(body.fecha < new Date()){
-        const {data,error, count} = supabase
-        .from("eventos")
-        .delete()
+        const {data,error, count} = await supabase
+        .from("evento")
+        .delete({count: 'exact'})
         .eq("id",id)
-
+        
         if(error) {
             return new Response(JSON.stringify(error),{
                 status: 500,
@@ -89,7 +85,7 @@ export async function DELETE(request) {
     }
 
     return new Response(JSON.stringify({message: "error"}),{
-        status: 500,
+        status: 501,
         headers: {"Content-type": "application/json"}
     })
 }

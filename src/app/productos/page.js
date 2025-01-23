@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 async function fetchData() {
@@ -12,6 +13,7 @@ async function fetchData() {
 
 export default function Inventario() {
     const [productos,setProductos] = useState([])
+    const router = useRouter()
     useEffect(() => {
         const load = async() => {
             setProductos(await fetchData())
@@ -20,23 +22,29 @@ export default function Inventario() {
     },[])
 
     return(
-        <table border={"3"}>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Descripcion</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
-                </tr>
-            </thead>
-            <tbody>
-                {
-                    productos.map(producto => 
-                        <Row producto={producto} key={producto.id} setProductos={setProductos}/>
-                    )
-                }
-            </tbody>
-        </table>
+        <div>
+            <table border={"3"}>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripcion</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        productos.map(producto => 
+                            <Row producto={producto} key={producto.id} setProductos={setProductos}/>
+                        )
+                    }
+                </tbody>
+            </table>
+            <button onClick={() => router.push('/productos/add')}>
+                Añadir productos
+            </button>
+        </div>
+        
     )
 }
 

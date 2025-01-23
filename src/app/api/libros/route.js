@@ -28,7 +28,7 @@ async function getQuery(filter) {
             query = query.eq("leido",false)
             break
     }
-    return await query
+    return await query.order("id")
 }
 export async function DELETE(request) {
     const {searchParams} = new URL(request.url)
@@ -54,7 +54,6 @@ export async function DELETE(request) {
 
 export async function POST(request) {
     const body = await request.json()
-
     if(body.titulo && body.autor) {
         const {data,error} = await supabase
         .from("libro")
@@ -72,6 +71,11 @@ export async function POST(request) {
             headers: {"Content-type": "application/json"}
         })
     }
+
+    return new Response(JSON.stringify({message: "Error"}), {
+        status: 500,
+        headers: {"Content-type": "application/json"}
+    })
 }
 
 export async function PUT(request) {
